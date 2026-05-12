@@ -1,10 +1,9 @@
-const age = 17;
-console.log(status = (age >= 18)  ? aprobar(): denegar()); 
-
-function denegar(){
-    return false
+const age = 16;
+console.log(status = (age >= 18) ? aprobar(): denegar()); 
+function aprobar(){
+    console.log("Es mayor de edad");
 }
 
-function aprobar(){
-    return true
+function denegar(){
+    console.log("NO es mayor de edad");
 }
