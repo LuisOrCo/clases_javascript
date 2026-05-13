@@ -17,3 +17,5 @@ multiplicar(5);
 function multiplicarQuemado(numero, a=5){
     return numero*a;
 }
+
+console.log(multiplicarQuemado(8))

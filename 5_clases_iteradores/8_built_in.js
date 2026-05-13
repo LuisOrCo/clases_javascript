@@ -1,3 +1,3 @@
-console.log(Math.round(4.9));
+console.log(Math.ceil(4.2));
 
-console.log("HOLA".toLowerCase());
+console.log("hola".toUpperCase());

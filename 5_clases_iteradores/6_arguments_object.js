@@ -6,7 +6,7 @@ function concatenar(sep) {
     let result = "";
     for (let i = 1; i < arguments.length; i++)
     {
-        result += arguments[i] + sep;
+        result += arguments[i];
     }
     return result;
 }
