@@ -7,3 +7,13 @@
 //   2. Añade "monitor" al inicio → unshift()
 //   3. Elimina el último elemento y muéstralo → pop()
 //   4. Muestra la longitud final del array
+
+const inventario = [
+]
+inventario.push("teclado")
+console.log(inventario)
+inventario.unshift("monitor")
+console.log(inventario)
+console.log(inventario.pop())
+console.log(inventario.length)
+console.log(inventario)

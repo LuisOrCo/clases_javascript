@@ -5,3 +5,12 @@
 // Tarea: Crea una función que reciba un array de longitud IMPAR y reemplace
 //        el elemento central por la cadena "CENTRO".
 //        Debe funcionar para cualquier array de longitud impar.
+
+const inventario = [1,2,3,4,5]
+
+function mitad(arreglo){
+    let mitad = parseInt((arreglo.length) / 2)
+    arreglo[mitad] = "CENTRO"
+}
+mitad(inventario)
+console.log(inventario)

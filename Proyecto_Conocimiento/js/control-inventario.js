@@ -187,6 +187,7 @@ function calcularValorParte(parte) {
 
     // TODO: Retornar esa variable.
 
+
 }
 
 
