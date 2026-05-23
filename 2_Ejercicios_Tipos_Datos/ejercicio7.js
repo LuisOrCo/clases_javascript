@@ -4,3 +4,6 @@ Ejercicio: Crea un pequeño experimento comparando null y undefined usando la ig
 
 Objetivo: Observar por qué JavaScript los considera iguales en un caso pero diferentes en el otro.
 */
+
+console.log(null == undefined)
+console.log(null === undefined)

@@ -4,3 +4,13 @@ Ejercicio: Crea una función checkSpam(str) que devuelva true si el texto contie
 
 Condición: La función no debe distinguir entre mayúsculas y minúsculas.
 */
+
+function checkSpam(str){
+    let textoVerificacion = str.toLowerCase()
+
+    return textoVerificacion.includes("viagra") || textoVerificacion.includes("xxx");
+}
+
+console.log(checkSpam("Compra Viagra"))
+console.log(checkSpam("Solo XXX"))
+console.log(checkSpam("Hola muchacho"))

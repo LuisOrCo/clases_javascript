@@ -9,3 +9,17 @@ Cambia el valor de name a "Pete".
 Elimina la propiedad name del objeto.
 
 */
+
+const user = {}
+
+user.name="jhon"
+
+console.log(user)
+
+user.name="Pete"
+
+console.log(user)
+
+delete user.name;
+
+console.log(user)

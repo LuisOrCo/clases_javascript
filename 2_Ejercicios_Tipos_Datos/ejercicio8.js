@@ -4,3 +4,15 @@ Ejercicio: Intenta realizar una operación matemática imposible (como parseInt(
 
     Pista: Recuerda que NaN no es igual a sí mismo, por lo que debes usar isNaN() o Number.isNaN().
 */
+
+let noEsNumero = parseInt("500");
+
+function esNan(numero){
+    if(Number.isNaN(numero)){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+console.log(esNan(noEsNumero))

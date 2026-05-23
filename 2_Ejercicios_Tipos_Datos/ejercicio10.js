@@ -4,3 +4,21 @@ Ejercicio: Crea una función multiplyNumeric(obj) que recorra todas las propieda
 
 Requisito: La función debe modificar el objeto original "in-place".
 */
+
+function multiplyNumeric(obj){
+    for(let propiedad in obj){
+        if(typeof(obj[propiedad]) === "number"){
+            obj[propiedad]*=2
+        }
+    }
+}
+
+const user = {
+    edad: 20,
+    altura: 1,
+    nombre: "Luis"
+}
+
+multiplyNumeric(user)
+
+console.log(user)

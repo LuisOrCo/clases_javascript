@@ -4,3 +4,12 @@ Ejercicio: Escribe un código que utilice typeof para mostrar en la consola el t
 
 Nota: Observa bien qué devuelve para null y para el valor que termina en n.
 */
+
+console.log(
+    typeof(42),
+    typeof("Hola"),
+    typeof(true),
+    typeof(undefined),
+    typeof(null),
+    typeof(10n)
+)
