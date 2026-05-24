@@ -187,6 +187,8 @@ function calcularValorParte(parte) {
 
     // TODO: Retornar esa variable.
 
+    let totalParte = parte.cantidad * parte.precio_unitario
+    return totalParte
 
 }
 
@@ -211,6 +213,11 @@ function calcularTotalInventario(listado) {
 
     // TODO: Retornar el acumulador con el total calculado.
 
+    let TotalInventario = 0
+
+    for(let x = 0;x<listado.length;x++){
+     TotalInventario=TotalInventario + calcularValorParte(listado[x])   
+    }
 }
 
 
@@ -233,10 +240,19 @@ function registrarEntrada(idParte, cantidad) {
         return false;
     }
 
+
+
     // TODO: Asignar a la propiedad cantidad de la parte encontrada
     //       el resultado de combinar el stock actual con la cantidad recibida.
     //       La nueva cantidad no debe superar capacidad_maxima.
+    let cantidadNueva = parte.cantidad + cantidad
 
+    if(cantidadNueva <= parte.capacidad_maxima){
+        parte.cantidad = cantidadNueva
+        return true
+    } else{
+        return false
+    }
     // TODO: Retornar true para indicar éxito.
 
 }
@@ -268,7 +284,13 @@ function registrarSalida(idParte, cantidad) {
     //       el valor que resulta de descontar las unidades retiradas.
 
     // TODO: Retornar true para confirmar que la operación se realizó.
-
+    let cantidadNueva = parte.cantidad - cantidad
+    if(cantidad > parte.cantidad){
+        return false
+    } else{
+        parte.cantidad = cantidadNueva
+        return true
+    }
 }
 
 
@@ -288,7 +310,8 @@ function calcularPorcentajeOcupacion(parte) {
     //       la cantidad actual, expresada en porcentaje (0 a 100).
 
     // TODO: Retornar ese porcentaje como número.
-
+    let porcentajeObjeto = (parte.cantidad / parte.capacidad_maxima) * 100
+    return porcentajeObjeto
 }
 
 
@@ -306,6 +329,12 @@ function verificarStockMinimo(parte) {
 
     // TODO: Comparar la cantidad actual con el umbral de alerta.
     //       Retornar el resultado de esa comparación directamente.
+
+    if(parte.cantidad <= parte.cantidad_minima){
+        return true
+    }else{
+        return false
+    }
 
 }
 
