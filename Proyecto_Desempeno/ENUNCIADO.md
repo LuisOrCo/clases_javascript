@@ -142,13 +142,9 @@ El panel de estadísticas debe mantenerse actualizado después de cada cambio, m
 
 ## Archivo a Entregar
 
-El **único archivo** que debes completar y entregar es:
+El **único repoisitorio** que debes completar y debe contener los 3 archivos el html, el css y el js:
 
-```
-Proyecto_Desempeno/js/control-vuelos.js
-```
 
-**No modifiques** `spacex_control_vuelos.html` ni `css/styles-vuelos.css`.
 
 ---
 
@@ -278,4 +274,4 @@ Proyecto_Desempeno/js/control-vuelos.js
 
 ---
 
-*Consulta con tu instructor la fecha de entrega y el canal de radicación.*
+b
