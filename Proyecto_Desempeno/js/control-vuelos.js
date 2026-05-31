@@ -32,7 +32,16 @@
 //  mantener una lista de registros, cada uno con múltiples propiedades.
 // ─────────────────────────────────────────────────────────────────────────────
 
+let lanzamientos = []
 
+let filtroActivo = "todos"
+
+let contadorId = 1
+
+const btnCancelarEdicion = document.getElementById("btn-cancelar-edicion");
+btnCancelarEdicion.addEventListener("click", () => {
+    limpiarFormulario();
+});
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  SECCIÓN 2 — FUNCIONES UTILITARIAS
@@ -44,6 +53,15 @@
 //  Por ejemplo: generar un identificador único para cada registro,
 //  o transformar una fecha al formato que se mostrará en las tarjetas.
 // ─────────────────────────────────────────────────────────────────────────────
+
+
+function generarId() {
+    const id = `SX-${String(contadorId).padStart(3, "0")}`;
+    contadorId++;
+    return id;
+
+}
+
 
 
 
@@ -65,6 +83,151 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 
+function renderizarTarjetas(){
+    const grid = document.getElementById("grid-lanzamientos");
+    const estadoVacio = document.getElementById("estado-vacio")
+
+    grid.innerHTML="";
+
+    if (lanzamientos.length === 0){
+        grid.appendChild(estadoVacio);
+        return;
+    }
+    else{
+
+        const lanzamientosFiltrados =
+        filtroActivo === "todos"
+        ? lanzamientos
+        : lanzamientos.filter(
+            lanzamiento => lanzamiento.estado === filtroActivo
+        );
+
+
+
+        lanzamientosFiltrados.forEach((lanzamiento) => {
+            const article = document.createElement("article");
+
+            article.classList.add(
+                "organism-launch-card",
+                `organism-launch-card--${lanzamiento.estado}`
+            );
+
+            
+            article.dataset.id = lanzamiento.id;
+            article.dataset.tipo = lanzamiento.tipo;
+            article.dataset.estado = lanzamiento.estado;
+
+            const header = document.createElement("div");
+            header.classList.add("molecule-card-header");
+
+            const spanId = document.createElement("span");
+
+            spanId.classList.add(
+                "molecule-card-header__id",
+                "atom-mono"
+            );
+
+
+            spanId.textContent = lanzamiento.id;
+
+            const badge = document.createElement("span");
+
+            badge.classList.add(
+                "atom-badge",
+                `atom-badge--${lanzamiento.estado}`
+            );
+
+            badge.textContent = lanzamiento.estado.toUpperCase();
+
+
+            header.appendChild(spanId);
+            header.appendChild(badge);
+
+            article.appendChild(header);
+
+            const body = document.createElement("div");
+            body.classList.add("molecule-card-body");
+
+            const nombre = document.createElement("div");
+            nombre.classList.add("molecule-card-body__name");
+
+            nombre.textContent = lanzamiento.nombre;
+
+            const tipo = document.createElement("div");
+            tipo.classList.add("molecule-card-body__type");
+
+            tipo.textContent = lanzamiento.tipo.toUpperCase();
+
+            const objetivo = document.createElement("div");
+            objetivo.classList.add("molecule-card-body__objective");
+
+            objetivo.textContent = lanzamiento.objetivo;
+
+            const fecha = document.createElement("div");
+            fecha.classList.add("molecule-card-body__date","atom-mono");
+
+            fecha.textContent = lanzamiento.fecha
+
+            body.appendChild(nombre);
+            body.appendChild(tipo);
+            body.appendChild(objetivo);
+            body.appendChild(fecha);
+
+            article.appendChild(body);
+
+            const footer = document.createElement("div");
+            footer.classList.add("molecule-card-footer");
+
+            const btnEditar = document.createElement("button");
+
+            btnEditar.classList.add(
+                "atom-btn", 
+                "atom-btn--secondary",
+                "atom-btn--sm"
+            );
+
+            btnEditar.dataset.action = "editar";
+            btnEditar.dataset.id = lanzamiento.id;
+
+            btnEditar.textContent = "EDITAR";
+
+            const btnCancelar = document.createElement("button");
+
+            btnCancelar.classList.add(
+                "atom-btn",
+                "atom-btn--danger",
+                "atom-btn--sm"
+            );
+
+            btnCancelar.dataset.action = "cancelar";
+            btnCancelar.dataset.id = lanzamiento.id;
+
+            btnCancelar.textContent = "CANCELAR";
+
+            footer.appendChild(btnEditar);
+            footer.appendChild(btnCancelar);
+
+            article.appendChild(footer);
+
+            grid.appendChild(article);
+
+            
+
+        })
+
+        activarHoverTarjetas();
+        conectarBotonesTarjetas();
+
+        const contadorVisibles = document.getElementById("contador-visibles");
+        contadorVisibles.textContent = `${lanzamientosFiltrados.length} REGISTROS`;
+
+        const contadorLanzamientos = document.getElementById("contador-lanzamientos");
+        contadorLanzamientos.textContent = lanzamientos.length;
+    }
+
+    }
+
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  SECCIÓN 4 — ANIMACIONES DE TARJETAS (HOVER)
@@ -79,6 +242,24 @@
 //    · mouseover  → activar el estado de hover
 //    · mouseout   → desactivar el estado de hover
 // ─────────────────────────────────────────────────────────────────────────────
+
+
+function activarHoverTarjetas(){
+    const tarjetas = document.querySelectorAll(".organism-launch-card");
+
+    tarjetas.forEach((tarjeta) => {
+        tarjeta.addEventListener("mouseover", () => {
+            tarjeta.classList.add("is-hovered");
+        })
+
+        tarjeta.addEventListener("mouseout", () =>{
+            tarjeta.classList.remove("is-hovered")
+        } )
+
+    });
+
+}
+
 
 
 
@@ -103,6 +284,75 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 
+function manejarFormulario(event){
+    event.preventDefault();
+
+    try{
+        const nombre = document.getElementById("input-nombre-serie").value;
+        const tipo = document.getElementById("select-tipo-cohete").value;
+        const fecha = document.getElementById("input-fecha-lanzamiento").value;
+        const objetivo = document.getElementById("input-objetivo-mision").value;
+        const idEdicion = document.getElementById("input-id-edicion").value;
+
+        if(
+            nombre === "" ||
+            tipo === "" ||
+            fecha === "" ||
+            objetivo === ""
+        ){
+            alert("Todos los campos son obligatorios.");
+            return;
+        }
+
+        if(idEdicion === ""){
+            const lanzamiento = {
+                id: generarId(),
+                nombre: nombre,
+                tipo: tipo,
+                fecha: fecha,
+                objetivo: objetivo,
+                estado: "pendiente"
+            };
+
+            lanzamientos.push(lanzamiento);
+        }else{
+            const lanzamiento = lanzamientos.find(lanzamiento => lanzamiento.id === idEdicion);
+
+            if(lanzamiento){
+                lanzamiento.nombre = nombre;
+                lanzamiento.tipo = tipo;
+                lanzamiento.fecha = fecha;
+                lanzamiento.objetivo = objetivo
+            }
+        }
+
+        renderizarTarjetas();
+        limpiarFormulario()
+
+
+    }
+    catch(error){
+        console.error(error);
+    }
+}
+
+
+function limpiarFormulario(){
+    document.getElementById("input-nombre-serie").value = "";
+    document.getElementById("select-tipo-cohete").value = "";
+    document.getElementById("input-fecha-lanzamiento").value = "";
+    document.getElementById("input-objetivo-mision").value = "";
+    document.getElementById("input-id-edicion").value = "";
+
+    btnCancelarEdicion.style.display = "none";
+}
+
+const formulario = document.getElementById("form-lanzamiento");
+
+formulario.addEventListener("submit",manejarFormulario)
+
+
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  SECCIÓN 6 — CAMBIOS DE ESTADO
@@ -115,6 +365,78 @@
 //  Puedes usar estos atributos para saber qué registro modificar y
 //  qué acción ejecutar cuando el usuario hace clic.
 // ─────────────────────────────────────────────────────────────────────────────
+
+
+function editarLanzamiento(id){
+    const lanzamiento = lanzamientos.find(lanzamiento => lanzamiento.id === id);
+
+    if(!lanzamiento){
+        return;
+    }
+
+    if(lanzamiento.estado !== "pendiente"){
+        alert("Solo se pueden editar lanzamientos pendientes.")
+        return;
+    }
+    
+    document.getElementById("input-nombre-serie").value =
+        lanzamiento.nombre;
+
+    document.getElementById("select-tipo-cohete").value =
+        lanzamiento.tipo;
+
+    document.getElementById("input-fecha-lanzamiento").value =
+        lanzamiento.fecha;
+
+    document.getElementById("input-objetivo-mision").value =
+        lanzamiento.objetivo;
+
+    document.getElementById("input-id-edicion").value =
+        lanzamiento.id;
+
+    btnCancelarEdicion.style.display = "inline-flex";
+
+}
+
+function cancelarLanzamiento(id){
+    const lanzamiento = lanzamientos.find(lanzamiento => lanzamiento.id === id);
+    if(!lanzamiento){
+        return;
+    }
+
+    if(lanzamiento.estado !== "pendiente"){
+        alert("Solo se pueden eliminar lanzamientos pendientes.")
+        return
+    }
+
+    lanzamiento.estado = "cancelado";
+
+    renderizarTarjetas();
+}
+
+function conectarBotonesTarjetas(){
+    const botones = document.querySelectorAll("button[data-action]");
+
+    botones.forEach((boton) => {
+        boton.addEventListener("click", () =>{
+            const accion = boton.dataset.action;
+            const id = boton.dataset.id;
+
+            if(accion === "editar"){
+                editarLanzamiento(id);
+            };
+
+            if(accion === "cancelar"){
+                cancelarLanzamiento(id)
+            };
+        })
+    })
+}
+
+
+
+
+
 
 
 
@@ -133,6 +455,62 @@
 //
 //  Clase CSS del botón activo: atom-btn--filter-active
 // ─────────────────────────────────────────────────────────────────────────────
+
+
+function aplicarFiltro(filtro){
+    filtroActivo = filtro;
+
+    renderizarTarjetas();
+    actualizarBotonesFiltro();
+
+}
+
+
+function actualizarBotonesFiltro(){
+
+    const botones =
+        document.querySelectorAll("[data-filter]");
+
+    botones.forEach((boton) => {
+
+        boton.classList.remove(
+            "atom-btn--filter-active"
+        );
+
+        if(
+            boton.dataset.filter === filtroActivo
+        ){
+            boton.classList.add(
+                "atom-btn--filter-active"
+            );
+        }
+
+    });
+
+}
+
+function conectarFiltros(){
+
+    const botones =
+        document.querySelectorAll("[data-filter]");
+
+    botones.forEach((boton) => {
+
+        boton.addEventListener("click", () => {
+
+            aplicarFiltro(
+                boton.dataset.filter
+            );
+
+            renderizarTarjetas();
+
+            actualizarBotonesFiltro();
+
+        });
+
+    });
+
+}
 
 
 
@@ -156,6 +534,44 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 
+function actualizarReloj(){
+
+    const ahora = new Date();
+
+    const horas =
+        String(ahora.getUTCHours()).padStart(2,"0");
+
+    const minutos =
+        String(ahora.getUTCMinutes()).padStart(2,"0");
+
+    const segundos =
+        String(ahora.getUTCSeconds()).padStart(2,"0");
+
+    document.getElementById("reloj-principal").textContent =
+        `${horas}:${minutos}:${segundos}Z`;
+}
+
+function monitorearLanzamientos() {
+    const ahora = new Date();
+    let huboCambios = false; // Bandera para saber si debemos repintar el DOM
+
+    lanzamientos.forEach((lanzamiento) => {
+        if (
+            lanzamiento.estado === "pendiente" &&
+            new Date(lanzamiento.fecha) <= ahora
+        ) {
+            lanzamiento.estado = "lanzado";
+            huboCambios = true; // Registramos que hubo un cambio real
+        }
+    });
+
+    // Solo repintamos las tarjetas si hubo cambios en los estados
+    if (huboCambios) {
+        renderizarTarjetas();
+        actualizarEstadisticas();
+    }
+}
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  SECCIÓN 9 — ESTADÍSTICAS
@@ -171,6 +587,36 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 
+function actualizarEstadisticas(){
+
+    const pendientes =
+        lanzamientos.filter(
+            lanzamiento => lanzamiento.estado === "pendiente"
+        ).length;
+
+    const lanzados =
+        lanzamientos.filter(
+            lanzamiento => lanzamiento.estado === "lanzado"
+        ).length;
+
+    const cancelados =
+        lanzamientos.filter(
+            lanzamiento => lanzamiento.estado === "cancelado"
+        ).length;
+
+    document.getElementById("stat-pendientes").textContent =
+        pendientes;
+
+    document.getElementById("stat-lanzados").textContent =
+        lanzados;
+
+    document.getElementById("stat-cancelados").textContent =
+        cancelados;
+
+    document.getElementById("stat-total").textContent =
+        lanzamientos.length;
+}
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  SECCIÓN 10 — INICIALIZACIÓN
@@ -184,3 +630,24 @@
 //    · Iniciar el intervalo del reloj y el monitor automático
 //    · Hacer el primer renderizado y actualizar las estadísticas
 // ─────────────────────────────────────────────────────────────────────────────
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    conectarFiltros();
+
+    actualizarReloj();
+
+    renderizarTarjetas();
+
+    actualizarEstadisticas();
+
+    setInterval(() => {
+
+        actualizarReloj();
+
+        monitorearLanzamientos();
+
+    }, 1000);
+
+});
